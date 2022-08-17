@@ -6,4 +6,7 @@ spring:
     password: password
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
-    show-sql: true
+    properties:
+      hibernate:
+        show_sql: true
+        use_sql_comments: true
