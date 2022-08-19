@@ -83,12 +83,6 @@
 							<version>${mapstruct.version}</version>
 						</path>
 					</annotationProcessorPaths>
-					<showWarnings>true</showWarnings>
-					<compilerArgs>
-						<arg>
-							-Amapstruct.verbose=true
-						</arg>
-					</compilerArgs>
 				</configuration>
 			</plugin>
 		</plugins>

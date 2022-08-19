@@ -3,8 +3,11 @@ package com.mike.lunchvoter.controller;
 import com.mike.lunchvoter.dto.RestaurantDto;
 import com.mike.lunchvoter.exception.IllegalRequestDataException;
 import com.mike.lunchvoter.service.RestaurantService;
+import com.mike.lunchvoter.validation.ValidateOnCreate;
+import com.mike.lunchvoter.validation.ValidateOnUpdate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.Nullable;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,6 +24,7 @@ import java.util.Objects;
 
 @RestController
 @RequestMapping(RestaurantController.RESTAURANT_URL)
+@Validated
 public class RestaurantController {
 
     static final String RESTAURANT_URL = "/restaurants";
@@ -41,6 +45,7 @@ public class RestaurantController {
     }
 
     @PostMapping
+    @Validated(ValidateOnCreate.class)
     public RestaurantDto create(@Valid @RequestBody RestaurantDto restaurantDto) {
         return restaurantService.create(restaurantDto);
     }
@@ -62,6 +67,7 @@ public class RestaurantController {
     }
 
     @PostMapping("/{id}")
+    @Validated(ValidateOnUpdate.class)
     public RestaurantDto update(@NotNull @PathVariable("id") Integer restaurantId,
                                 @Valid @RequestBody RestaurantDto restaurantDto) {
         if (!Objects.equals(restaurantId, restaurantDto.getId())) {
