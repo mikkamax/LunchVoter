@@ -13,6 +13,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 import java.util.Objects;
 
 @Entity
@@ -30,12 +31,15 @@ public class Restaurant {
     private Integer id;
 
     @Column(name = "name")
+    @NotNull
     private String name;
 
     @Column(name = "address")
+    @NotNull
     private String address;
 
     @Column(name = "is_active")
+    @NotNull
     private Boolean isActive;
 
     @Override

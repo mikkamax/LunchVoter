@@ -13,6 +13,9 @@
         </encoder>
     </appender>
 
+    <logger name="org.springframework.orm.jpa" level="trace"/>
+    <logger name="org.springframework.transaction" level="trace"/>
+
     <root level="INFO">
         <appender-ref ref="CONSOLE"/>
     </root>
