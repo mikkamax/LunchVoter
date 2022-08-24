@@ -33,17 +33,17 @@ CREATE TABLE menu
     id            INTEGER PRIMARY KEY AUTO_INCREMENT,
     restaurant_id INTEGER NOT NULL,
     date          DATE    NOT NULL,
-    FOREIGN KEY (restaurant_id) REFERENCES restaurant (id),
+    FOREIGN KEY (restaurant_id) REFERENCES restaurant (id) ON DELETE CASCADE,
     CONSTRAINT menu_unique_restaurant_date_idx UNIQUE (restaurant_id, date)
 );
 
 CREATE TABLE dish
 (
-    menu_id INTEGER NOT NULL,
-    name    VARCHAR NOT NULL,
-    PRICE   DECIMAL(8, 2),
-    CONSTRAINT dish_menu_name_pk PRIMARY KEY (menu_id, name),
-    FOREIGN KEY (menu_id) REFERENCES menu (id)
+    id      INTEGER PRIMARY KEY AUTO_INCREMENT,
+    menu_id INTEGER       NOT NULL,
+    name    VARCHAR       NOT NULL,
+    PRICE   DECIMAL(8, 2) NOT NULL,
+    FOREIGN KEY (menu_id) REFERENCES menu (id) ON DELETE CASCADE
 );
 
 CREATE TABLE vote
@@ -52,6 +52,6 @@ CREATE TABLE vote
     menu_id INTEGER NOT NULL,
     date    DATE    NOT NULL,
     CONSTRAINT vote_user_date_pk PRIMARY KEY (user_id, date),
-    FOREIGN KEY (user_id) REFERENCES users (id),
-    FOREIGN KEY (menu_id) REFERENCES menu (id)
+    FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
+    FOREIGN KEY (menu_id) REFERENCES menu (id) ON DELETE CASCADE
 );

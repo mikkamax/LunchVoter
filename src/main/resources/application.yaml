@@ -10,3 +10,8 @@ spring:
       hibernate:
         show_sql: true
         use_sql_comments: true
+  mvc:
+    format:
+      date: iso
+      date-time: iso
+      time: iso

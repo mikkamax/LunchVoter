@@ -6,7 +6,6 @@ import com.mike.lunchvoter.validation.ValidateOnCreate;
 import com.mike.lunchvoter.validation.ValidateOnUpdate;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
@@ -18,11 +17,10 @@ import javax.validation.constraints.Size;
 
 @Getter
 @Setter
-@NoArgsConstructor
 @EqualsAndHashCode
 @ToString
-@JsonInclude(JsonInclude.Include.NON_NULL)
 @Accessors(chain = true)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class RestaurantDto {
 
     /**

@@ -6,7 +6,6 @@ import com.mike.lunchvoter.exception.CustomConstraintViolationException;
 import com.mike.lunchvoter.exception.ObjectNotFoundException;
 import com.mike.lunchvoter.mapping.RestaurantMapper;
 import com.mike.lunchvoter.repository.RestaurantRepository;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
@@ -16,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
-@Slf4j
 @Service
 @Transactional(readOnly = true)
 public class RestaurantService {
@@ -71,19 +69,33 @@ public class RestaurantService {
 
     @Transactional
     public RestaurantDto update(Integer restaurantId, RestaurantDto restaurantDto) {
-        checkIfExistsOrElseThrow(restaurantId);
+        checkIfRestaurantWithThisIdExistsOrElseThrow(restaurantId);
         return createOrUpdate(restaurantDto);
     }
 
     @Transactional
     public void delete(Integer restaurantId) {
-        checkIfExistsOrElseThrow(restaurantId);
+        checkIfRestaurantWithThisIdExistsOrElseThrow(restaurantId);
         restaurantRepository.deleteById(restaurantId);
     }
 
     private RestaurantDto createOrUpdate(RestaurantDto restaurantDto) {
         Restaurant restaurant = restaurantMapper.mapToEntity(restaurantDto);
 
+        checkForNoConstraintViolationsOrElseThrow(restaurant);
+
+        return restaurantMapper.mapToDto(
+                restaurantRepository.save(restaurant)
+        );
+    }
+
+    private void checkIfRestaurantWithThisIdExistsOrElseThrow(Integer restaurantId) {
+        if (!restaurantRepository.existsById(restaurantId)) {
+            throw objectNotFoundException(restaurantId);
+        }
+    }
+
+    private void checkForNoConstraintViolationsOrElseThrow(Restaurant restaurant) {
         boolean isConstraintViolated = restaurantRepository.existsByIdNotAndNameEqualsIgnoreCaseAndAddressEqualsIgnoreCase(
                 Optional.ofNullable(restaurant.getId()).orElse(NON_EXISTING_ID),
                 restaurant.getName(),
@@ -94,19 +106,9 @@ public class RestaurantService {
             throw new CustomConstraintViolationException("Cannot save " + restaurant
                     + " because Restaurant with same name and address already exists in the database");
         }
-
-        return restaurantMapper.mapToDto(
-                restaurantRepository.save(restaurant)
-        );
     }
 
-    private void checkIfExistsOrElseThrow(Integer restaurantId) {
-        if (!restaurantRepository.existsById(restaurantId)) {
-            throw objectNotFoundException(restaurantId);
-        }
-    }
-
-    private ObjectNotFoundException objectNotFoundException(Integer restaurantId) {
+    private static ObjectNotFoundException objectNotFoundException(Integer restaurantId) {
         return new ObjectNotFoundException("There is no restaurant with id = " + restaurantId);
     }
 

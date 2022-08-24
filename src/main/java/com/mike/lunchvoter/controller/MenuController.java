@@ -1,17 +1,43 @@
 package com.mike.lunchvoter.controller;
 
 import com.mike.lunchvoter.dto.MenuDto;
+import com.mike.lunchvoter.exception.IllegalRequestDataException;
+import com.mike.lunchvoter.service.MenuService;
+import com.mike.lunchvoter.validation.ValidateOnCreate;
+import com.mike.lunchvoter.validation.ValidateOnUpdate;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.lang.Nullable;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @RequestMapping(MenuController.MENU_URL)
+@Validated
 public class MenuController {
 
     static final String MENU_URL = "/menu";
+
+    private final MenuService menuService;
+
+    @Autowired
+    public MenuController(MenuService menuService) {
+        this.menuService = menuService;
+    }
 
     //-- создавать меню
     //-- смотреть
@@ -26,30 +52,42 @@ public class MenuController {
     //-- смотреть распределение голосов за сегодня
     //-- смотреть распределение голосов на какую-либо дату
 
-    public MenuDto create(MenuDto menuDto) {
-        return null;
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    @Validated(ValidateOnCreate.class)
+    public MenuDto create(@Valid @RequestBody MenuDto menuDto) {
+        return menuService.create(menuDto);
     }
 
-    public MenuDto get(Integer menuId) {
-        return null;
+    @GetMapping("/{id}")
+    public MenuDto get(@NotNull @PathVariable("id") Integer menuId) {
+        return menuService.get(menuId);
     }
 
-    public List<MenuDto> getAll() {
-        return null;
+    @GetMapping
+    public List<MenuDto> getAllByParams(@Nullable @RequestParam(required = false) LocalDate date,
+                                        @Nullable @RequestParam(required = false) Integer restaurantId) {
+        if (date == null && restaurantId == null) {
+            return menuService.getAll();
+        }
+
+        return menuService.getAllByParams(date, restaurantId);
     }
 
-    public List<MenuDto> getByDate(LocalDate date) {
-        return null;
+    @PostMapping("/{id}")
+    @Validated(ValidateOnUpdate.class)
+    public MenuDto update(@NotNull @PathVariable("id") Integer menuId,
+                          @Valid @RequestBody MenuDto menuDto) {
+        if (!Objects.equals(menuId, menuDto.getId())) {
+            throw new IllegalRequestDataException(menuDto + " id doesn't match path id = " + menuId);
+        }
+
+        return menuService.update(menuId, menuDto);
     }
 
-    public List<MenuDto> getByRestaurant(Integer restaurantId) {
-        return null;
+    @DeleteMapping("/{id}")
+    public void delete(@NotNull @PathVariable("id") Integer menuId) {
+        menuService.delete(menuId);
     }
 
-    public MenuDto update(Long menuId, MenuDto menuDto) {
-        return null;
-    }
-
-    public void delete(Integer menuId) {
-    }
 }
