@@ -34,8 +34,8 @@ public class Restaurant {
     @NotNull
     private String address;
 
-    @Column(name = "is_active")
+    @Column(name = "enabled")
     @NotNull
-    private Boolean isActive;
+    private Boolean enabled;
 
 }

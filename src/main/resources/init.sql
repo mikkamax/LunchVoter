@@ -7,7 +7,7 @@ CREATE TABLE users
     email             VARCHAR NOT NULL,
     password          VARCHAR NOT NULL,
     registration_date DATE    NOT NULL,
-    is_active         BOOLEAN DEFAULT TRUE,
+    enabled           BOOLEAN DEFAULT TRUE,
     CONSTRAINT user_unique_email_idx UNIQUE (email)
 );
 
@@ -21,10 +21,10 @@ CREATE TABLE user_roles
 
 CREATE TABLE restaurant
 (
-    id        INTEGER PRIMARY KEY AUTO_INCREMENT,
-    name      VARCHAR NOT NULL,
-    address   VARCHAR NOT NULL,
-    is_active BOOLEAN NOT NULL DEFAULT TRUE,
+    id      INTEGER PRIMARY KEY AUTO_INCREMENT,
+    name    VARCHAR NOT NULL,
+    address VARCHAR NOT NULL,
+    enabled BOOLEAN NOT NULL DEFAULT TRUE,
     CONSTRAINT restaurant_name_address_idx UNIQUE (name, address)
 );
 

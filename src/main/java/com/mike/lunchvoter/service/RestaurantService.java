@@ -52,12 +52,12 @@ public class RestaurantService {
                 .toList();
     }
 
-    public List<RestaurantDto> getByParams(String name, String address, Boolean isActive) {
+    public List<RestaurantDto> getByParams(String name, String address, Boolean enabled) {
         Example<Restaurant> example = Example.of(
                 new Restaurant()
                         .setName(name)
                         .setAddress(address)
-                        .setIsActive(isActive),
+                        .setEnabled(enabled),
                 EXAMPLE_MATCHER_FOR_GET_BY_PARAMS
         );
 

@@ -48,6 +48,6 @@ public class RestaurantDto {
      * Is the restaurant active
      */
     @NotNull
-    private Boolean isActive;
+    private Boolean enabled;
 
 }

@@ -8,5 +8,5 @@ public class UserDto {
     private String email;
     private String password;
     private LocalDate registrationDate;
-    private Boolean isActive;
+    private Boolean enabled;
 }

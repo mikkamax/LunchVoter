@@ -61,12 +61,12 @@ public class RestaurantController {
     @GetMapping
     public List<RestaurantDto> getAllByParams(@Nullable @RequestParam(required = false) String name,
                                               @Nullable @RequestParam(required = false) String address,
-                                              @Nullable @RequestParam(required = false) Boolean isActive) {
-        if (name == null && address == null && isActive == null) {
+                                              @Nullable @RequestParam(required = false) Boolean enabled) {
+        if (name == null && address == null && enabled == null) {
             return restaurantService.getAll();
         }
 
-        return restaurantService.getByParams(name, address, isActive);
+        return restaurantService.getByParams(name, address, enabled);
     }
 
     @PostMapping("/{id}")
