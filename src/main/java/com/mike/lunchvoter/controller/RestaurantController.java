@@ -8,6 +8,7 @@ import com.mike.lunchvoter.validation.ValidateOnUpdate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.lang.Nullable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,17 +30,9 @@ import java.util.Objects;
 @Validated
 public class RestaurantController {
 
-    static final String RESTAURANT_URL = "/restaurants";
+    static final String RESTAURANT_URL = "/api/v1/restaurants";
 
     private final RestaurantService restaurantService;
-    //- рестораны
-    //-- создавать
-    //-- смотреть
-    //-- редактировать название
-    //-- активировать/деактивировать ресторан
-    //-- смотреть весь список
-    //-- смотреть список активных
-    //-- искать по названию ресторана
 
     @Autowired
     public RestaurantController(RestaurantService restaurantService) {
@@ -49,6 +42,7 @@ public class RestaurantController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @Validated(ValidateOnCreate.class)
+    @PreAuthorize("hasAuthority('restaurant:create')")
     public RestaurantDto create(@Valid @RequestBody RestaurantDto restaurantDto) {
         return restaurantService.create(restaurantDto);
     }
@@ -71,6 +65,7 @@ public class RestaurantController {
 
     @PostMapping("/{id}")
     @Validated(ValidateOnUpdate.class)
+    @PreAuthorize("hasAuthority('restaurant:update')")
     public RestaurantDto update(@NotNull @PathVariable("id") Integer restaurantId,
                                 @Valid @RequestBody RestaurantDto restaurantDto) {
         if (!Objects.equals(restaurantId, restaurantDto.getId())) {
@@ -81,6 +76,7 @@ public class RestaurantController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('restaurant:delete')")
     public void delete(@NotNull @PathVariable("id") Integer restaurantId) {
         restaurantService.delete(restaurantId);
     }

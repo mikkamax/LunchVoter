@@ -8,6 +8,7 @@ import com.mike.lunchvoter.validation.ValidateOnUpdate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.lang.Nullable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,7 +31,7 @@ import java.util.Objects;
 @Validated
 public class MenuController {
 
-    static final String MENU_URL = "/menu";
+    static final String MENU_URL = "/api/v1/menus";
 
     private final MenuService menuService;
 
@@ -39,22 +40,10 @@ public class MenuController {
         this.menuService = menuService;
     }
 
-    //-- создавать меню
-    //-- смотреть
-    //-- добавлять в меню блюда
-    //-- редактировать блюда
-    //-- удалять блюда
-    //-- смотреть меню по дате по всем ресторанам
-    //-- смотреть меню по ресторану по всем датам
-
-    //-- смотреть все меню за сегодня
-    //-- проголосовать за меню текущего дня
-    //-- смотреть распределение голосов за сегодня
-    //-- смотреть распределение голосов на какую-либо дату
-
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @Validated(ValidateOnCreate.class)
+    @PreAuthorize("hasAuthority('menu:create')")
     public MenuDto create(@Valid @RequestBody MenuDto menuDto) {
         return menuService.create(menuDto);
     }
@@ -76,6 +65,7 @@ public class MenuController {
 
     @PostMapping("/{id}")
     @Validated(ValidateOnUpdate.class)
+    @PreAuthorize("hasAuthority('menu:update')")
     public MenuDto update(@NotNull @PathVariable("id") Integer menuId,
                           @Valid @RequestBody MenuDto menuDto) {
         if (!Objects.equals(menuId, menuDto.getId())) {
@@ -86,6 +76,7 @@ public class MenuController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('menu:delete')")
     public void delete(@NotNull @PathVariable("id") Integer menuId) {
         menuService.delete(menuId);
     }

@@ -7,16 +7,9 @@ CREATE TABLE users
     email             VARCHAR NOT NULL,
     password          VARCHAR NOT NULL,
     registration_date DATE    NOT NULL,
-    enabled           BOOLEAN DEFAULT TRUE,
+    role              VARCHAR NOT NULL,
+    enabled           BOOLEAN NOT NULL DEFAULT TRUE,
     CONSTRAINT user_unique_email_idx UNIQUE (email)
-);
-
-CREATE TABLE user_roles
-(
-    user_id INTEGER NOT NULL,
-    role    VARCHAR NOT NULL,
-    CONSTRAINT user_roles_idx UNIQUE (user_id, role),
-    FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
 );
 
 CREATE TABLE restaurant

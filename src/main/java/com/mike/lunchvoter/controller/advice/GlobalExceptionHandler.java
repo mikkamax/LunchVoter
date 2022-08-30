@@ -1,6 +1,7 @@
 package com.mike.lunchvoter.controller.advice;
 
 import com.mike.lunchvoter.exception.CustomConstraintViolationException;
+import com.mike.lunchvoter.exception.CustomSecurityException;
 import com.mike.lunchvoter.exception.IllegalRequestDataException;
 import com.mike.lunchvoter.exception.ObjectNotFoundException;
 import lombok.extern.slf4j.Slf4j;
@@ -44,6 +45,26 @@ public class GlobalExceptionHandler {
         return createErrorDetails(
                 "ObjectNotFoundException",
                 e.getMessage()
+        );
+    }
+
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    @ExceptionHandler(IllegalCallerException.class)
+    public ErrorDetails handleIllegalCallerException(IllegalCallerException e) {
+        logOnException(e);
+        return createErrorDetails(
+                "IllegalCallerException",
+                e.getMessage()
+        );
+    }
+
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    @ExceptionHandler(CustomSecurityException.class)
+    public ErrorDetails handleCustomSecurityException(CustomSecurityException e) {
+        logOnException(e);
+        return createErrorDetails(
+                "CustomSecurityException",
+                "Illegal access exception"
         );
     }
 
@@ -136,7 +157,7 @@ public class GlobalExceptionHandler {
     }
 
     private void logOnException(Exception e) {
-        log.error("Service error: " + e);
+        log.error("Service error: ", e);
     }
 
     private String formatErrorMessage(String errorBean, String errorProperty, String errorExplanation) {

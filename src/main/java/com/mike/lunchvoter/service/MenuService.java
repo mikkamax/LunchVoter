@@ -41,9 +41,9 @@ public class MenuService {
 
     @Transactional
     public MenuDto create(MenuDto menuDto) {
-        Menu menu = menuMapper.mapToEntity(menuDto);
+        checkForNoConstraintViolationsOrElseThrow(menuDto);
 
-        checkForNoConstraintViolationsOrElseThrow(menu);
+        Menu menu = menuMapper.mapToEntity(menuDto);
 
         return menuMapper.mapToDto(
                 menuRepository.save(menu)
@@ -63,8 +63,7 @@ public class MenuService {
                 .toList();
     }
 
-    public List<MenuDto> getAllByParams(LocalDate date,
-                                        Integer restaurantId) {
+    public List<MenuDto> getAllByParams(LocalDate date, Integer restaurantId) {
         Example<Menu> example = Example.of(
                 new Menu()
                         .setDate(date)
@@ -81,9 +80,9 @@ public class MenuService {
     @Transactional
     public MenuDto update(Integer menuId, MenuDto menuDto) {
         checkIfMenuWithThisIdExistsOrElseThrow(menuId);
+        checkForNoConstraintViolationsOrElseThrow(menuDto);
 
         Menu menu = menuMapper.mapToEntity(menuDto);
-        checkForNoConstraintViolationsOrElseThrow(menu);
         checkConsistencyForAllDishesWithIdsOrElseThrow(menu);
 
         return menuMapper.mapToDto(
@@ -97,15 +96,15 @@ public class MenuService {
         menuRepository.deleteById(menuId);
     }
 
-    private void checkForNoConstraintViolationsOrElseThrow(Menu menu) {
+    private void checkForNoConstraintViolationsOrElseThrow(MenuDto menuDto) {
         boolean isConstraintViolated = menuRepository.existsByIdNotAndRestaurantIdAndDate(
-                Optional.ofNullable(menu.getId()).orElse(NON_EXISTING_ID),
-                menu.getRestaurantId(),
-                menu.getDate()
+                Optional.ofNullable(menuDto.getId()).orElse(NON_EXISTING_ID),
+                menuDto.getRestaurantId(),
+                menuDto.getDate()
         );
 
         if (isConstraintViolated) {
-            throw new CustomConstraintViolationException("Cannot save " + menu
+            throw new CustomConstraintViolationException("Cannot save " + menuDto
                     + " because Menu with same restaurantId and date already exists in the database");
         }
     }

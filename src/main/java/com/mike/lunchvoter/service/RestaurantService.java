@@ -80,9 +80,9 @@ public class RestaurantService {
     }
 
     private RestaurantDto createOrUpdate(RestaurantDto restaurantDto) {
-        Restaurant restaurant = restaurantMapper.mapToEntity(restaurantDto);
+        checkForNoConstraintViolationsOrElseThrow(restaurantDto);
 
-        checkForNoConstraintViolationsOrElseThrow(restaurant);
+        Restaurant restaurant = restaurantMapper.mapToEntity(restaurantDto);
 
         return restaurantMapper.mapToDto(
                 restaurantRepository.save(restaurant)
@@ -95,15 +95,15 @@ public class RestaurantService {
         }
     }
 
-    private void checkForNoConstraintViolationsOrElseThrow(Restaurant restaurant) {
+    private void checkForNoConstraintViolationsOrElseThrow(RestaurantDto restaurantDto) {
         boolean isConstraintViolated = restaurantRepository.existsByIdNotAndNameEqualsIgnoreCaseAndAddressEqualsIgnoreCase(
-                Optional.ofNullable(restaurant.getId()).orElse(NON_EXISTING_ID),
-                restaurant.getName(),
-                restaurant.getAddress()
+                Optional.ofNullable(restaurantDto.getId()).orElse(NON_EXISTING_ID),
+                restaurantDto.getName(),
+                restaurantDto.getAddress()
         );
 
         if (isConstraintViolated) {
-            throw new CustomConstraintViolationException("Cannot save " + restaurant
+            throw new CustomConstraintViolationException("Cannot save " + restaurantDto
                     + " because Restaurant with same name and address already exists in the database");
         }
     }

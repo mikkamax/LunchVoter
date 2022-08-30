@@ -1,6 +1,7 @@
 package com.mike.lunchvoter.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.mike.lunchvoter.validation.ValidateOnCreate;
 import com.mike.lunchvoter.validation.ValidateOnUpdate;
 import lombok.EqualsAndHashCode;
@@ -54,6 +55,7 @@ public class MenuDto {
      * Votes count for this menu
      */
     @Null
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Integer votesCount;
 
 }
