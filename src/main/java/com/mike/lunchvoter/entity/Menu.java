@@ -39,7 +39,7 @@ public class Menu {
     private Integer restaurantId;
 
     @NotNull
-    @Column(name = "date")
+    @Column(name = "for_date")
     private LocalDate date;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)

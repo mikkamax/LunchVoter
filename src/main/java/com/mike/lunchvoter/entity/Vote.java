@@ -18,7 +18,7 @@ public class Vote {
     private VoteIdentity voteIdentity;
 
     @NotNull
-    @Column(name = "date")
+    @Column(name = "for_date")
     private LocalDate date;
 
 }

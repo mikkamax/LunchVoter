@@ -39,7 +39,7 @@ public class User {
     private String email;
 
     @NotNull
-    @Column(name = "password")
+    @Column(name = "user_password")
     private String password;
 
     @NotNull
@@ -48,7 +48,7 @@ public class User {
 
     @NotNull
     @Enumerated(EnumType.STRING)
-    @Column(name = "role")
+    @Column(name = "user_role")
     private Role role;
 
     @NotNull
