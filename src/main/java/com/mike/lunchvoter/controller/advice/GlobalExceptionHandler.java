@@ -1,5 +1,6 @@
 package com.mike.lunchvoter.controller.advice;
 
+import com.mike.lunchvoter.exception.AlreadyVotedTodayException;
 import com.mike.lunchvoter.exception.CustomConstraintViolationException;
 import com.mike.lunchvoter.exception.CustomSecurityException;
 import com.mike.lunchvoter.exception.IllegalRequestDataException;
@@ -44,6 +45,17 @@ public class GlobalExceptionHandler {
         logOnException(e);
         return createErrorDetails(
                 "ObjectNotFoundException",
+                e.getMessage()
+        );
+    }
+
+    @ResponseStatus(HttpStatus.CONFLICT)
+    @ExceptionHandler(AlreadyVotedTodayException.class)
+    public ErrorDetails handleAlreadyVotedTodayException(AlreadyVotedTodayException e) {
+        logOnException(e);
+
+        return createErrorDetails(
+                "AlreadyVotedTodayException",
                 e.getMessage()
         );
     }

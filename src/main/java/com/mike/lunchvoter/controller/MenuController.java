@@ -64,6 +64,12 @@ public class MenuController {
         return menuService.getAllByParams(date, restaurantId);
     }
 
+    @GetMapping("/today")
+    // TODO: 31.08.2022 needs caching
+    public List<MenuDto> getAllForToday() {
+        return menuService.getAllByParams(LocalDate.now(), null);
+    }
+
     @PutMapping("/{id}")
     @Validated(ValidateOnUpdate.class)
     @PreAuthorize("hasAuthority('menu:update')")

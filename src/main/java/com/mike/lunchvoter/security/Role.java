@@ -12,7 +12,12 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public enum Role {
     ADMIN(Set.of(Permission.values())),
-    USER(Set.of(Permission.PROFILE_READ, Permission.PROFILE_UPDATE, Permission.PROFILE_DELETE));
+    USER(Set.of(
+            Permission.PROFILE_READ,
+            Permission.PROFILE_UPDATE,
+            Permission.PROFILE_DELETE,
+            Permission.RESTAURANT_VOTE
+    ));
 
     private final Set<Permission> permissions;
 

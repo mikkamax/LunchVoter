@@ -1,10 +1,9 @@
 package com.mike.lunchvoter.controller;
 
 import com.mike.lunchvoter.dto.UserDto;
-import com.mike.lunchvoter.exception.CustomSecurityException;
 import com.mike.lunchvoter.security.Role;
-import com.mike.lunchvoter.security.SecurityUserDetails;
 import com.mike.lunchvoter.service.UserService;
+import com.mike.lunchvoter.util.SecurityUtil;
 import com.mike.lunchvoter.validation.ValidateOnCreate;
 import com.mike.lunchvoter.validation.ValidateOnUpdate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,7 +59,7 @@ public class ProfileController {
     @PreAuthorize("hasAuthority('profile:read')")
     public UserDto getProfile(@NotNull Authentication authentication) {
         return userService.get(
-                getAuthenticatedUserIdOrElseThrow(authentication)
+                SecurityUtil.getAuthenticatedUserIdOrElseThrow(authentication)
         );
     }
 
@@ -70,7 +69,7 @@ public class ProfileController {
     public UserDto update(@Valid @RequestBody UserDto userDto,
                           @NotNull Authentication authentication) {
 
-        Integer userId = getAuthenticatedUserIdOrElseThrow(authentication);
+        Integer userId = SecurityUtil.getAuthenticatedUserIdOrElseThrow(authentication);
 
         checkIfAuthorizedUserIdMatchesUserDtoIdOrElseThrow(userId, userDto.getId());
 
@@ -87,16 +86,8 @@ public class ProfileController {
     @PreAuthorize("hasAuthority('profile:delete')")
     public void delete(@NotNull Authentication authentication) {
         userService.delete(
-                getAuthenticatedUserIdOrElseThrow(authentication)
+                SecurityUtil.getAuthenticatedUserIdOrElseThrow(authentication)
         );
-    }
-
-    private Integer getAuthenticatedUserIdOrElseThrow(Authentication authentication) {
-        if (!(authentication.getPrincipal() instanceof SecurityUserDetails)) {
-            throw new CustomSecurityException("Illegal access exception with authentication = " + authentication);
-        }
-
-        return ((SecurityUserDetails) authentication.getPrincipal()).getUser().getId();
     }
 
     private void checkIfAuthorizedUserIdMatchesUserDtoIdOrElseThrow(Integer authorizedUserId, Integer userDtoId) {

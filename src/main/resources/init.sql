@@ -17,7 +17,6 @@ CREATE TABLE restaurant
     id      INTEGER PRIMARY KEY AUTO_INCREMENT,
     name    VARCHAR NOT NULL,
     address VARCHAR NOT NULL,
-    enabled BOOLEAN NOT NULL DEFAULT TRUE,
     CONSTRAINT restaurant_name_address_idx UNIQUE (name, address)
 );
 

@@ -1,14 +1,17 @@
 package com.mike.lunchvoter.controller;
 
 import com.mike.lunchvoter.dto.RestaurantDto;
+import com.mike.lunchvoter.dto.VoteDto;
 import com.mike.lunchvoter.exception.IllegalRequestDataException;
 import com.mike.lunchvoter.service.RestaurantService;
+import com.mike.lunchvoter.util.SecurityUtil;
 import com.mike.lunchvoter.validation.ValidateOnCreate;
 import com.mike.lunchvoter.validation.ValidateOnUpdate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.lang.Nullable;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -55,13 +58,27 @@ public class RestaurantController {
 
     @GetMapping
     public List<RestaurantDto> getAllByParams(@Nullable @RequestParam(required = false) String name,
-                                              @Nullable @RequestParam(required = false) String address,
-                                              @Nullable @RequestParam(required = false) Boolean enabled) {
-        if (name == null && address == null && enabled == null) {
+                                              @Nullable @RequestParam(required = false) String address) {
+        if (name == null && address == null) {
             return restaurantService.getAll();
         }
 
-        return restaurantService.getByParams(name, address, enabled);
+        return restaurantService.getByParams(name, address);
+    }
+
+    @GetMapping("/today")
+    // TODO: 31.08.2022 needs caching
+    public List<RestaurantDto> getAllWithMenusForToday() {
+        return restaurantService.getAllWithMenusForToday();
+    }
+
+    @PostMapping("/{id}/votes")
+    @PreAuthorize("hasAuthority('restaurant:vote')")
+    public VoteDto voteForRestaurant(@NotNull @PathVariable("id") Integer restaurantId,
+                                     @NotNull Authentication authentication) {
+        Integer userId = SecurityUtil.getAuthenticatedUserIdOrElseThrow(authentication);
+
+        return restaurantService.voteForRestaurant(restaurantId, userId);
     }
 
     @PutMapping("/{id}")
@@ -81,4 +98,5 @@ public class RestaurantController {
     public void delete(@NotNull @PathVariable("id") Integer restaurantId) {
         restaurantService.delete(restaurantId);
     }
+
 }

@@ -8,6 +8,8 @@ import com.mike.lunchvoter.exception.ObjectNotFoundException;
 import com.mike.lunchvoter.mapping.MenuMapper;
 import com.mike.lunchvoter.repository.DishRepository;
 import com.mike.lunchvoter.repository.MenuRepository;
+import com.mike.lunchvoter.repository.RestaurantRepository;
+import com.mike.lunchvoter.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
@@ -16,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -24,23 +27,26 @@ public class MenuService {
 
     private static final ExampleMatcher EXAMPLE_MATCHER_FOR_GET_BY_PARAMS = ExampleMatcher.matching()
             .withIgnoreNullValues();
-    private static final int NON_EXISTING_ID = -1;
 
     private final MenuRepository menuRepository;
     private final DishRepository dishRepository;
+    private final RestaurantRepository restaurantRepository;
     private final MenuMapper menuMapper;
 
     @Autowired
     public MenuService(MenuRepository menuRepository,
                        DishRepository dishRepository,
+                       RestaurantRepository restaurantRepository,
                        MenuMapper menuMapper) {
         this.menuRepository = menuRepository;
         this.dishRepository = dishRepository;
+        this.restaurantRepository = restaurantRepository;
         this.menuMapper = menuMapper;
     }
 
     @Transactional
     public MenuDto create(MenuDto menuDto) {
+        checkIfReferencedRestaurantExistsOrElseThrow(menuDto);
         checkForNoConstraintViolationsOrElseThrow(menuDto);
 
         Menu menu = menuMapper.mapToEntity(menuDto);
@@ -80,6 +86,7 @@ public class MenuService {
     @Transactional
     public MenuDto update(Integer menuId, MenuDto menuDto) {
         checkIfMenuWithThisIdExistsOrElseThrow(menuId);
+        checkIfReferencedRestaurantExistsOrElseThrow(menuDto);
         checkForNoConstraintViolationsOrElseThrow(menuDto);
 
         Menu menu = menuMapper.mapToEntity(menuDto);
@@ -96,9 +103,16 @@ public class MenuService {
         menuRepository.deleteById(menuId);
     }
 
+    private void checkIfReferencedRestaurantExistsOrElseThrow(MenuDto menuDto) {
+        if (!restaurantRepository.existsById(menuDto.getRestaurantId())) {
+            throw new CustomConstraintViolationException("Cannot save " + menuDto
+                    + " because restaurantId with Id = " + menuDto.getRestaurantId() + " doesn't exist");
+        }
+    }
+
     private void checkForNoConstraintViolationsOrElseThrow(MenuDto menuDto) {
         boolean isConstraintViolated = menuRepository.existsByIdNotAndRestaurantIdAndDate(
-                Optional.ofNullable(menuDto.getId()).orElse(NON_EXISTING_ID),
+                Optional.ofNullable(menuDto.getId()).orElse(Constants.NON_EXISTING_ID),
                 menuDto.getRestaurantId(),
                 menuDto.getDate()
         );
@@ -123,7 +137,7 @@ public class MenuService {
         }
 
         dishes.stream()
-                .filter(dish -> dish.getId() != null)
+                .filter(dish -> Objects.nonNull(dish.getId()))
                 .forEach(dish -> {
                     if (!dishRepository.existsByIdAndMenu_Id(dish.getId(), menu.getId())) {
                         throw new ObjectNotFoundException("Dish with id = " + dish.getId()

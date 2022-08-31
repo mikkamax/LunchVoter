@@ -4,14 +4,20 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
+import org.hibernate.annotations.BatchSize;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @Entity
 @Getter
@@ -34,8 +40,11 @@ public class Restaurant {
     @NotNull
     private String address;
 
-    @Column(name = "enabled")
-    @NotNull
-    private Boolean enabled;
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "restaurant_id", referencedColumnName = "id")
+    @BatchSize(size = 200)
+    @Where(clause = "for_date = today()")
+    @ToString.Exclude
+    private List<Menu> menus;
 
 }

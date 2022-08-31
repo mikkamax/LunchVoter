@@ -7,6 +7,7 @@ import com.mike.lunchvoter.exception.ObjectNotFoundException;
 import com.mike.lunchvoter.mapping.UserMapper;
 import com.mike.lunchvoter.repository.UserRepository;
 import com.mike.lunchvoter.security.Role;
+import com.mike.lunchvoter.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
@@ -20,7 +21,6 @@ import java.util.Optional;
 @Transactional(readOnly = true)
 public class UserService {
 
-    private static final int NON_EXISTING_ID = -1;
     private static final ExampleMatcher EXAMPLE_MATCHER_FOR_GET_BY_PARAMS = ExampleMatcher.matching()
             .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING)
             .withIgnoreCase()
@@ -104,7 +104,7 @@ public class UserService {
 
     private void checkForNoConstraintViolationsOrElseThrow(UserDto userDto) {
         boolean isConstraintViolated = userRepository.existsByIdNotAndEmailEqualsIgnoreCase(
-                Optional.ofNullable(userDto.getId()).orElse(NON_EXISTING_ID),
+                Optional.ofNullable(userDto.getId()).orElse(Constants.NON_EXISTING_ID),
                 userDto.getEmail()
         );
 

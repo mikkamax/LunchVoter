@@ -14,6 +14,7 @@ public enum Permission {
     PROFILE_UPDATE("profile:update"),
     PROFILE_DELETE("profile:delete"),
     RESTAURANT_CREATE("restaurant:create"),
+    RESTAURANT_VOTE("restaurant:vote"),
     RESTAURANT_UPDATE("restaurant:update"),
     RESTAURANT_DELETE("restaurant:delete"),
     MENU_CREATE("menu:create"),

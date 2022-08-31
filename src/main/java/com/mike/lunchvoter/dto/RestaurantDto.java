@@ -2,6 +2,7 @@ package com.mike.lunchvoter.dto;
 
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.mike.lunchvoter.validation.ValidateOnCreate;
 import com.mike.lunchvoter.validation.ValidateOnUpdate;
 import lombok.EqualsAndHashCode;
@@ -14,6 +15,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 import javax.validation.constraints.Size;
+import java.util.List;
 
 @Getter
 @Setter
@@ -45,9 +47,10 @@ public class RestaurantDto {
     private String address;
 
     /**
-     * Is the restaurant active
+     * List of corresponding menus
      */
-    @NotNull
-    private Boolean enabled;
+    @Null
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    private List<MenuDto> menus;
 
 }
