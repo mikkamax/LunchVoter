@@ -16,6 +16,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -42,7 +43,7 @@ public class ProfileController {
         this.passwordEncoder = passwordEncoder;
     }
 
-    @PostMapping("/register")
+    @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @Validated(ValidateOnCreate.class)
     public UserDto register(@Valid @RequestBody UserDto userDto) {
@@ -63,7 +64,7 @@ public class ProfileController {
         );
     }
 
-    @PostMapping
+    @PutMapping
     @Validated(ValidateOnUpdate.class)
     @PreAuthorize("hasAuthority('profile:update')")
     public UserDto update(@Valid @RequestBody UserDto userDto,
