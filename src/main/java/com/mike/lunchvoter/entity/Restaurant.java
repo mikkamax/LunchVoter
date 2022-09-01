@@ -43,7 +43,7 @@ public class Restaurant {
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "restaurant_id", referencedColumnName = "id")
     @BatchSize(size = 200)
-    @Where(clause = "for_date = today()")
+    @Where(clause = "for_date = CURRENT_DATE()")
     @ToString.Exclude
     private List<Menu> menus;
 

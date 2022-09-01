@@ -3,10 +3,12 @@ package com.mike.lunchvoter.logging;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 @Aspect
 @Component
+@ConditionalOnProperty(value = "logging.aspect.enabled", havingValue = "true")
 public class LoggingAspect {
 
     private static final String ENTITIES_TO_LOG = """

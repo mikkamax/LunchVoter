@@ -6,6 +6,7 @@ import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 
 import java.lang.reflect.Method;
 import java.util.Objects;
@@ -13,6 +14,7 @@ import java.util.StringJoiner;
 
 @Slf4j
 @UtilityClass
+@ConditionalOnBean(LoggingAspect.class)
 public class LogUtils {
 
     private static final String IN_POINTER = ">>";

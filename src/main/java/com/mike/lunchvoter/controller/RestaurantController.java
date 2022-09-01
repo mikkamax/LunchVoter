@@ -8,6 +8,7 @@ import com.mike.lunchvoter.util.SecurityUtil;
 import com.mike.lunchvoter.validation.ValidateOnCreate;
 import com.mike.lunchvoter.validation.ValidateOnUpdate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.lang.Nullable;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -67,7 +68,7 @@ public class RestaurantController {
     }
 
     @GetMapping("/today")
-    // TODO: 31.08.2022 needs caching
+    @Cacheable("restaurantsToday")
     public List<RestaurantDto> getAllWithMenusForToday() {
         return restaurantService.getAllWithMenusForToday();
     }

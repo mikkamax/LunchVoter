@@ -6,6 +6,8 @@ import com.mike.lunchvoter.service.MenuService;
 import com.mike.lunchvoter.validation.ValidateOnCreate;
 import com.mike.lunchvoter.validation.ValidateOnUpdate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.lang.Nullable;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -45,6 +47,7 @@ public class MenuController {
     @ResponseStatus(HttpStatus.CREATED)
     @Validated(ValidateOnCreate.class)
     @PreAuthorize("hasAuthority('menu:create')")
+    @CacheEvict(value = {"restaurantsToday", "menusToday"}, allEntries = true)
     public MenuDto create(@Valid @RequestBody MenuDto menuDto) {
         return menuService.create(menuDto);
     }
@@ -65,7 +68,7 @@ public class MenuController {
     }
 
     @GetMapping("/today")
-    // TODO: 31.08.2022 needs caching
+    @Cacheable("menusToday")
     public List<MenuDto> getAllForToday() {
         return menuService.getAllByParams(LocalDate.now(), null);
     }
@@ -73,6 +76,7 @@ public class MenuController {
     @PutMapping("/{id}")
     @Validated(ValidateOnUpdate.class)
     @PreAuthorize("hasAuthority('menu:update')")
+    @CacheEvict(value = {"restaurantsToday", "menusToday"}, allEntries = true)
     public MenuDto update(@NotNull @PathVariable("id") Integer menuId,
                           @Valid @RequestBody MenuDto menuDto) {
         if (!Objects.equals(menuId, menuDto.getId())) {
@@ -84,6 +88,7 @@ public class MenuController {
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('menu:delete')")
+    @CacheEvict(value = {"restaurantsToday", "menusToday"}, allEntries = true)
     public void delete(@NotNull @PathVariable("id") Integer menuId) {
         menuService.delete(menuId);
     }

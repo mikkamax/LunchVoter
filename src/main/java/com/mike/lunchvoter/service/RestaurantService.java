@@ -14,6 +14,7 @@ import com.mike.lunchvoter.repository.RestaurantRepository;
 import com.mike.lunchvoter.repository.VoteRepository;
 import com.mike.lunchvoter.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
@@ -38,16 +39,19 @@ public class RestaurantService {
     private final RestaurantMapper restaurantMapper;
     private final VoteRepository voteRepository;
     private final VoteMapper voteMapper;
+    private final LocalTime timeAfterWhichUserCantChangeVoteForToday;
 
     @Autowired
     public RestaurantService(RestaurantRepository restaurantRepository,
                              RestaurantMapper restaurantMapper,
                              VoteRepository voteRepository,
-                             VoteMapper voteMapper) {
+                             VoteMapper voteMapper,
+                             @Value("${vote.decision-time}") String voteDecisionTime) {
         this.restaurantRepository = restaurantRepository;
         this.restaurantMapper = restaurantMapper;
         this.voteRepository = voteRepository;
         this.voteMapper = voteMapper;
+        this.timeAfterWhichUserCantChangeVoteForToday = LocalTime.parse(voteDecisionTime);
     }
 
     @Transactional
@@ -145,7 +149,7 @@ public class RestaurantService {
 
     private void throwIfUserAlreadyVotedTodayAndItsTooLateToChangeVote(LocalTime localTime,
                                                                        VoteIdentity voteIdentity) {
-        if (localTime.isAfter(Constants.TIME_AFTER_WHICH_USER_CANT_CHANGE_VOTE_FOR_TODAY)) {
+        if (localTime.isAfter(timeAfterWhichUserCantChangeVoteForToday)) {
             if (voteRepository.existsById(voteIdentity)) {
                 throw new AlreadyVotedTodayException("User with id = " + voteIdentity.getUserId()
                         + " already voted today");
