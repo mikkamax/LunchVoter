@@ -78,6 +78,11 @@ public class UserService {
         User userToUpdate = getUserByIdOrElseThrow(userId);
 
         checkForNoConstraintViolationsOrElseThrow(userDto);
+
+        if (userToUpdate.getRole().equals(Role.ADMIN) && !userDto.getRole().equals(Role.ADMIN)) {
+            checkAndThrowIfTryingToDeleteOrRevokeAccessFromLastActiveAdmin();
+        }
+
         User updatedUser = userMapper.mapToEntityOnUpdate(userDto, userToUpdate);
 
         return userMapper.mapToDto(
@@ -87,19 +92,18 @@ public class UserService {
 
     @Transactional
     public void delete(Long userId) {
-        checkIfUSerWithThisIdExistsOrElseThrow(userId);
+        User userToDelete = getUserByIdOrElseThrow(userId);
+
+        if (userToDelete.getRole().equals(Role.ADMIN)) {
+            checkAndThrowIfTryingToDeleteOrRevokeAccessFromLastActiveAdmin();
+        }
+
         userRepository.deleteById(userId);
     }
 
     private User getUserByIdOrElseThrow(Long userId) {
         return userRepository.findById(userId)
                 .orElseThrow(() -> objectNotFoundException(userId));
-    }
-
-    private void checkIfUSerWithThisIdExistsOrElseThrow(Long userId) {
-        if (!userRepository.existsById(userId)) {
-            throw objectNotFoundException(userId);
-        }
     }
 
     private void checkForNoConstraintViolationsOrElseThrow(UserDto userDto) {
@@ -111,6 +115,15 @@ public class UserService {
         if (isConstraintViolated) {
             throw new CustomConstraintViolationException("Cannot save " + userDto
                     + " because User with same email already exists in the database");
+        }
+    }
+
+    private void checkAndThrowIfTryingToDeleteOrRevokeAccessFromLastActiveAdmin() {
+        long activeAdminsCount = userRepository.countByRoleAndEnabled(Role.ADMIN, true);
+
+        if (activeAdminsCount < 2) {
+            throw new CustomConstraintViolationException("Sorry, there is no way you're deleting"
+                    + " or revoking access from the last active admin");
         }
     }
 

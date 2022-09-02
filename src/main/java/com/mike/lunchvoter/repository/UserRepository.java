@@ -1,6 +1,7 @@
 package com.mike.lunchvoter.repository;
 
 import com.mike.lunchvoter.entity.User;
+import com.mike.lunchvoter.security.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
@@ -17,5 +18,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
      * @return true if such object exists in the database, false otherwise
      */
     boolean existsByIdNotAndEmailEqualsIgnoreCase(Long userId, String email);
+
+    long countByRoleAndEnabled(Role role, Boolean enabled);
 
 }
