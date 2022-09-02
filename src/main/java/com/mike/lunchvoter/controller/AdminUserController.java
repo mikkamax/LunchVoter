@@ -59,7 +59,7 @@ public class AdminUserController {
 
     @GetMapping("/{id}")
     @PreAuthorize("hasAuthority('user:read')")
-    public UserDto get(@NotNull @PathVariable("id") Integer userId) {
+    public UserDto get(@NotNull @PathVariable("id") Long userId) {
         return userService.get(userId);
     }
 
@@ -79,7 +79,7 @@ public class AdminUserController {
     @PutMapping("/{id}")
     @Validated(ValidateOnAdminUpdate.class)
     @PreAuthorize("hasAuthority('user:update')")
-    public UserDto update(@NotNull @PathVariable("id") Integer userId,
+    public UserDto update(@NotNull @PathVariable("id") Long userId,
                           @Valid @RequestBody UserDto userDto) {
         if (!Objects.equals(userId, userDto.getId())) {
             throw new IllegalRequestDataException(userDto + " id doesn't match path id = " + userId);
@@ -96,7 +96,7 @@ public class AdminUserController {
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('user:delete')")
-    public void delete(@NotNull @PathVariable("id") Integer userId) {
+    public void delete(@NotNull @PathVariable("id") Long userId) {
         userService.delete(userId);
     }
 

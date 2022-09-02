@@ -26,7 +26,7 @@ public class VoteIdentity implements Serializable {
 
     @NotNull
     @Column(name = "user_id")
-    private Integer userId;
+    private Long userId;
 
     @NotNull
     @Column(name = "for_date")

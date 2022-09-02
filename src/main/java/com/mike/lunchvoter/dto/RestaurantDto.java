@@ -30,20 +30,20 @@ public class RestaurantDto {
      */
     @Null(groups = ValidateOnCreate.class)
     @NotNull(groups = ValidateOnUpdate.class)
-    private Integer id;
+    private Long id;
 
     /**
      * Name of the restaurant
      */
     @NotBlank
-    @Size(max = 100)
+    @Size(min = 1, max = 255)
     private String name;
 
     /**
      * Address of the restaurant
      */
     @NotBlank
-    @Size(max = 255)
+    @Size(min = 5, max = 255)
     private String address;
 
     /**

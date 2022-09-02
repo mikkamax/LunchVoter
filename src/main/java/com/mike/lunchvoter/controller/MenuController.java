@@ -53,13 +53,13 @@ public class MenuController {
     }
 
     @GetMapping("/{id}")
-    public MenuDto get(@NotNull @PathVariable("id") Integer menuId) {
+    public MenuDto get(@NotNull @PathVariable("id") Long menuId) {
         return menuService.get(menuId);
     }
 
     @GetMapping
     public List<MenuDto> getAllByParams(@Nullable @RequestParam(required = false) LocalDate date,
-                                        @Nullable @RequestParam(required = false) Integer restaurantId) {
+                                        @Nullable @RequestParam(required = false) Long restaurantId) {
         if (date == null && restaurantId == null) {
             return menuService.getAll();
         }
@@ -77,7 +77,7 @@ public class MenuController {
     @Validated(ValidateOnUpdate.class)
     @PreAuthorize("hasAuthority('menu:update')")
     @CacheEvict(value = {"restaurantsToday", "menusToday"}, allEntries = true)
-    public MenuDto update(@NotNull @PathVariable("id") Integer menuId,
+    public MenuDto update(@NotNull @PathVariable("id") Long menuId,
                           @Valid @RequestBody MenuDto menuDto) {
         if (!Objects.equals(menuId, menuDto.getId())) {
             throw new IllegalRequestDataException(menuDto + " id doesn't match path id = " + menuId);
@@ -89,7 +89,7 @@ public class MenuController {
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('menu:delete')")
     @CacheEvict(value = {"restaurantsToday", "menusToday"}, allEntries = true)
-    public void delete(@NotNull @PathVariable("id") Integer menuId) {
+    public void delete(@NotNull @PathVariable("id") Long menuId) {
         menuService.delete(menuId);
     }
 

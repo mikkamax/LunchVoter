@@ -33,12 +33,13 @@ public class UserDto {
      */
     @Null(groups = {ValidateOnCreate.class, ValidateOnAdminCreate.class})
     @NotNull(groups = {ValidateOnUpdate.class, ValidateOnAdminUpdate.class})
-    private Integer id;
+    private Long id;
 
     /**
      * User's name
      */
     @NotBlank
+    @Size(min = 2, max = 255)
     private String name;
 
     /**
@@ -46,13 +47,14 @@ public class UserDto {
      */
     @NotBlank
     @Email
+    @Size(min = 5, max = 255)
     private String email;
 
     /**
      * User's password
      */
     @NotBlank(groups = {ValidateOnCreate.class, ValidateOnAdminCreate.class})
-    @Size(min = 5)
+    @Size(min = 5, max = 255)
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 

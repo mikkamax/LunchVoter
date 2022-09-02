@@ -28,6 +28,6 @@ public class Vote {
 
     @NotNull
     @Column(name = "restaurant_id")
-    private Integer restaurantId;
+    private Long restaurantId;
 
 }

@@ -56,7 +56,7 @@ public class MenuService {
         );
     }
 
-    public MenuDto get(Integer menuId) {
+    public MenuDto get(Long menuId) {
         return menuRepository.findById(menuId)
                 .map(menuMapper::mapToDto)
                 .orElseThrow(() -> objectNotFoundException(menuId));
@@ -69,7 +69,7 @@ public class MenuService {
                 .toList();
     }
 
-    public List<MenuDto> getAllByParams(LocalDate date, Integer restaurantId) {
+    public List<MenuDto> getAllByParams(LocalDate date, Long restaurantId) {
         Example<Menu> example = Example.of(
                 new Menu()
                         .setDate(date)
@@ -84,7 +84,7 @@ public class MenuService {
     }
 
     @Transactional
-    public MenuDto update(Integer menuId, MenuDto menuDto) {
+    public MenuDto update(Long menuId, MenuDto menuDto) {
         checkIfMenuWithThisIdExistsOrElseThrow(menuId);
         checkIfReferencedRestaurantExistsOrElseThrow(menuDto);
         checkForNoConstraintViolationsOrElseThrow(menuDto);
@@ -98,7 +98,7 @@ public class MenuService {
     }
 
     @Transactional
-    public void delete(Integer menuId) {
+    public void delete(Long menuId) {
         checkIfMenuWithThisIdExistsOrElseThrow(menuId);
         menuRepository.deleteById(menuId);
     }
@@ -123,7 +123,7 @@ public class MenuService {
         }
     }
 
-    private void checkIfMenuWithThisIdExistsOrElseThrow(Integer menuId) {
+    private void checkIfMenuWithThisIdExistsOrElseThrow(Long menuId) {
         if (!menuRepository.existsById(menuId)) {
             throw objectNotFoundException(menuId);
         }
@@ -146,7 +146,7 @@ public class MenuService {
                 });
     }
 
-    private static ObjectNotFoundException objectNotFoundException(Integer menuId) {
+    private static ObjectNotFoundException objectNotFoundException(Long menuId) {
         return new ObjectNotFoundException("There is no menu with id = " + menuId);
     }
 

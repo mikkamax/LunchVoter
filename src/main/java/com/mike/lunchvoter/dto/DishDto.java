@@ -26,13 +26,13 @@ public class DishDto {
      * ID of the dish
      */
     @Null(groups = ValidateOnCreate.class)
-    private Integer id;
+    private Long id;
 
     /**
      * Dish name
      */
     @NotBlank
-    @Size(max = 100)
+    @Size(min = 2, max = 255)
     private String name;
 
     /**

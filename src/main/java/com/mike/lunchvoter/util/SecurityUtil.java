@@ -10,7 +10,7 @@ import javax.validation.constraints.NotNull;
 @UtilityClass
 public class SecurityUtil {
 
-    public static Integer getAuthenticatedUserIdOrElseThrow(@NotNull Authentication authentication) {
+    public static Long getAuthenticatedUserIdOrElseThrow(@NotNull Authentication authentication) {
         if (!(authentication.getPrincipal() instanceof SecurityUserDetails)) {
             throw new CustomSecurityException("Illegal access exception with authentication = " + authentication);
         }

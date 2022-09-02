@@ -32,11 +32,11 @@ public class Menu {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     @NotNull
     @Column(name = "restaurant_id")
-    private Integer restaurantId;
+    private Long restaurantId;
 
     @NotNull
     @Column(name = "for_date")

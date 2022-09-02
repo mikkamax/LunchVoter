@@ -8,7 +8,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Repository
-public interface RestaurantRepository extends JpaRepository<Restaurant, Integer> {
+public interface RestaurantRepository extends JpaRepository<Restaurant, Long> {
 
     /**
      * Checks if object with same name and address (and DIFFERENT id) already exists in database
@@ -18,7 +18,7 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, Integer>
      * @param address of object to save
      * @return true if such object exists in the database, false otherwise
      */
-    boolean existsByIdNotAndNameEqualsIgnoreCaseAndAddressEqualsIgnoreCase(Integer id, String name, String address);
+    boolean existsByIdNotAndNameEqualsIgnoreCaseAndAddressEqualsIgnoreCase(Long id, String name, String address);
 
     List<Restaurant> findByMenus_Date(LocalDate date);
 

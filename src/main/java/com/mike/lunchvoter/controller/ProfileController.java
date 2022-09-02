@@ -69,7 +69,7 @@ public class ProfileController {
     public UserDto update(@Valid @RequestBody UserDto userDto,
                           @NotNull Authentication authentication) {
 
-        Integer userId = SecurityUtil.getAuthenticatedUserIdOrElseThrow(authentication);
+        Long userId = SecurityUtil.getAuthenticatedUserIdOrElseThrow(authentication);
 
         checkIfAuthorizedUserIdMatchesUserDtoIdOrElseThrow(userId, userDto.getId());
 
@@ -90,7 +90,7 @@ public class ProfileController {
         );
     }
 
-    private void checkIfAuthorizedUserIdMatchesUserDtoIdOrElseThrow(Integer authorizedUserId, Integer userDtoId) {
+    private void checkIfAuthorizedUserIdMatchesUserDtoIdOrElseThrow(Long authorizedUserId, Long userDtoId) {
         if (!Objects.equals(authorizedUserId, userDtoId)) {
             throw new IllegalCallerException("Illegal attempt to update user profile with id = " + userDtoId
                     + " by user with id = " + authorizedUserId);

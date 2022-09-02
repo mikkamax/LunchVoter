@@ -53,7 +53,7 @@ public class RestaurantController {
     }
 
     @GetMapping("/{id}")
-    public RestaurantDto get(@NotNull @PathVariable("id") Integer restaurantId) {
+    public RestaurantDto get(@NotNull @PathVariable("id") Long restaurantId) {
         return restaurantService.get(restaurantId);
     }
 
@@ -75,9 +75,9 @@ public class RestaurantController {
 
     @PostMapping("/{id}/votes")
     @PreAuthorize("hasAuthority('restaurant:vote')")
-    public VoteDto voteForRestaurant(@NotNull @PathVariable("id") Integer restaurantId,
+    public VoteDto voteForRestaurant(@NotNull @PathVariable("id") Long restaurantId,
                                      @NotNull Authentication authentication) {
-        Integer userId = SecurityUtil.getAuthenticatedUserIdOrElseThrow(authentication);
+        Long userId = SecurityUtil.getAuthenticatedUserIdOrElseThrow(authentication);
 
         return restaurantService.voteForRestaurant(restaurantId, userId);
     }
@@ -85,7 +85,7 @@ public class RestaurantController {
     @PutMapping("/{id}")
     @Validated(ValidateOnUpdate.class)
     @PreAuthorize("hasAuthority('restaurant:update')")
-    public RestaurantDto update(@NotNull @PathVariable("id") Integer restaurantId,
+    public RestaurantDto update(@NotNull @PathVariable("id") Long restaurantId,
                                 @Valid @RequestBody RestaurantDto restaurantDto) {
         if (!Objects.equals(restaurantId, restaurantDto.getId())) {
             throw new IllegalRequestDataException(restaurantDto + " id doesn't match path id = " + restaurantId);
@@ -96,7 +96,7 @@ public class RestaurantController {
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('restaurant:delete')")
-    public void delete(@NotNull @PathVariable("id") Integer restaurantId) {
+    public void delete(@NotNull @PathVariable("id") Long restaurantId) {
         restaurantService.delete(restaurantId);
     }
 

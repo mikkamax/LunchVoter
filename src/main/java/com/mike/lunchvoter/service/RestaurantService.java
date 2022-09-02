@@ -59,7 +59,7 @@ public class RestaurantService {
         return createOrUpdate(restaurantDto);
     }
 
-    public RestaurantDto get(Integer restaurantId) {
+    public RestaurantDto get(Long restaurantId) {
         return restaurantRepository.findById(restaurantId)
                 .map(restaurantMapper::mapToDtoWithoutMenus)
                 .orElseThrow(() -> objectNotFoundException(restaurantId));
@@ -93,7 +93,7 @@ public class RestaurantService {
     }
 
     @Transactional
-    public VoteDto voteForRestaurant(Integer restaurantId, Integer userId) {
+    public VoteDto voteForRestaurant(Long restaurantId, Long userId) {
         LocalDateTime localDateTime = LocalDateTime.now();
         VoteIdentity voteIdentity = new VoteIdentity(userId, localDateTime.toLocalDate());
 
@@ -107,13 +107,13 @@ public class RestaurantService {
     }
 
     @Transactional
-    public RestaurantDto update(Integer restaurantId, RestaurantDto restaurantDto) {
+    public RestaurantDto update(Long restaurantId, RestaurantDto restaurantDto) {
         checkIfRestaurantWithThisIdExistsOrElseThrow(restaurantId);
         return createOrUpdate(restaurantDto);
     }
 
     @Transactional
-    public void delete(Integer restaurantId) {
+    public void delete(Long restaurantId) {
         checkIfRestaurantWithThisIdExistsOrElseThrow(restaurantId);
         restaurantRepository.deleteById(restaurantId);
     }
@@ -128,7 +128,7 @@ public class RestaurantService {
         );
     }
 
-    private void checkIfRestaurantWithThisIdExistsOrElseThrow(Integer restaurantId) {
+    private void checkIfRestaurantWithThisIdExistsOrElseThrow(Long restaurantId) {
         if (!restaurantRepository.existsById(restaurantId)) {
             throw objectNotFoundException(restaurantId);
         }
@@ -157,7 +157,7 @@ public class RestaurantService {
         }
     }
 
-    private static ObjectNotFoundException objectNotFoundException(Integer restaurantId) {
+    private static ObjectNotFoundException objectNotFoundException(Long restaurantId) {
         return new ObjectNotFoundException("There is no restaurant with id = " + restaurantId);
     }
 

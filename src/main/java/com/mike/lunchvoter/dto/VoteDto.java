@@ -22,7 +22,7 @@ public class VoteDto {
      * User's id
      */
     @NotNull
-    private Integer userId;
+    private Long userId;
 
     /**
      * Vote's date
@@ -34,6 +34,6 @@ public class VoteDto {
      * Restaurant's id
      */
     @NotNull
-    private Integer restaurantId;
+    private Long restaurantId;
 
 }

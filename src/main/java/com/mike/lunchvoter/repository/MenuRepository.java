@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import java.time.LocalDate;
 
 @Repository
-public interface MenuRepository extends JpaRepository<Menu, Integer> {
+public interface MenuRepository extends JpaRepository<Menu, Long> {
 
     /**
      * Checks if object with same restaurantId and date (and DIFFERENT id) already exists in database
@@ -17,6 +17,6 @@ public interface MenuRepository extends JpaRepository<Menu, Integer> {
      * @param date         of object to save
      * @return true if such object exists in the database, false otherwise
      */
-    boolean existsByIdNotAndRestaurantIdAndDate(Integer menuId, Integer restaurantId, LocalDate date);
+    boolean existsByIdNotAndRestaurantIdAndDate(Long menuId, Long restaurantId, LocalDate date);
 
 }

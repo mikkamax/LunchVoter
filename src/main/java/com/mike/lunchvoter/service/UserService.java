@@ -46,7 +46,7 @@ public class UserService {
         );
     }
 
-    public UserDto get(Integer userId) {
+    public UserDto get(Long userId) {
         return userMapper.mapToDto(
                 getUserByIdOrElseThrow(userId)
         );
@@ -74,7 +74,7 @@ public class UserService {
     }
 
     @Transactional
-    public UserDto update(Integer userId, UserDto userDto) {
+    public UserDto update(Long userId, UserDto userDto) {
         User userToUpdate = getUserByIdOrElseThrow(userId);
 
         checkForNoConstraintViolationsOrElseThrow(userDto);
@@ -86,17 +86,17 @@ public class UserService {
     }
 
     @Transactional
-    public void delete(Integer userId) {
+    public void delete(Long userId) {
         checkIfUSerWithThisIdExistsOrElseThrow(userId);
         userRepository.deleteById(userId);
     }
 
-    private User getUserByIdOrElseThrow(Integer userId) {
+    private User getUserByIdOrElseThrow(Long userId) {
         return userRepository.findById(userId)
                 .orElseThrow(() -> objectNotFoundException(userId));
     }
 
-    private void checkIfUSerWithThisIdExistsOrElseThrow(Integer userId) {
+    private void checkIfUSerWithThisIdExistsOrElseThrow(Long userId) {
         if (!userRepository.existsById(userId)) {
             throw objectNotFoundException(userId);
         }
@@ -114,7 +114,7 @@ public class UserService {
         }
     }
 
-    private static ObjectNotFoundException objectNotFoundException(Integer userId) {
+    private static ObjectNotFoundException objectNotFoundException(Long userId) {
         return new ObjectNotFoundException("There is no user with id = " + userId);
     }
 

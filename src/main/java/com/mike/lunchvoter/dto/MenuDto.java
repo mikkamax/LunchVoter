@@ -29,13 +29,13 @@ public class MenuDto {
      */
     @Null(groups = ValidateOnCreate.class)
     @NotNull(groups = ValidateOnUpdate.class)
-    private Integer id;
+    private Long id;
 
     /**
      * ID of the corresponding restaurant
      */
     @NotNull
-    private Integer restaurantId;
+    private Long restaurantId;
 
     /**
      * ID date of the menu
