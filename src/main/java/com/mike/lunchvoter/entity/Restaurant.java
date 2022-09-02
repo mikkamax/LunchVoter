@@ -41,7 +41,7 @@ public class Restaurant {
     private String address;
 
     @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "restaurant_id", referencedColumnName = "id")
+    @JoinColumn(name = "restaurant_id", referencedColumnName = "id", insertable = false, updatable = false)
     @BatchSize(size = 200)
     @Where(clause = "for_date = CURRENT_DATE()")
     @ToString.Exclude
