@@ -92,7 +92,7 @@ public interface MenuApi {
     @GetMapping
     @Operation(
             summary = "Get menus by params",
-            description = "Returns list of today's menus with dishes containing requested params. " +
+            description = "Returns list of menus with dishes matching requested params. " +
                     "If no params provided - returns list of all menus. No permission required."
     )
     List<MenuDto> getAllByParams(@Nullable @RequestParam(required = false) LocalDate date,
@@ -101,7 +101,7 @@ public interface MenuApi {
     @GetMapping("/today")
     @Operation(
             summary = "Get today's menus",
-            description = "Returns list of menus with dishes. No permission required."
+            description = "Returns list of today's menus with dishes. No permission required."
     )
     List<MenuDto> getAllForToday();
 
@@ -138,10 +138,9 @@ public interface MenuApi {
                                                                "price": 30
                                                            },
                                                            {
-                                                               "id": 2,
                                                                "name": "Hamburger",
                                                                "price": 70.5
-                                                           },
+                                                           }
                                                        ]
                                                    }"""
                                    )

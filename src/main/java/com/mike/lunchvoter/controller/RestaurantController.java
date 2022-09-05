@@ -7,6 +7,7 @@ import com.mike.lunchvoter.exception.IllegalRequestDataException;
 import com.mike.lunchvoter.service.RestaurantService;
 import com.mike.lunchvoter.util.SecurityUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.lang.Nullable;
 import org.springframework.security.core.Authentication;
@@ -65,6 +66,7 @@ public class RestaurantController implements RestaurantApi {
     }
 
     @Override
+    @CacheEvict(value = {"restaurantsToday", "menusToday"}, allEntries = true)
     public RestaurantDto update(@NotNull @PathVariable Long restaurantId,
                                 @Valid @RequestBody RestaurantDto restaurantDto) {
         if (!Objects.equals(restaurantId, restaurantDto.getId())) {
@@ -75,6 +77,7 @@ public class RestaurantController implements RestaurantApi {
     }
 
     @Override
+    @CacheEvict(value = {"restaurantsToday", "menusToday"}, allEntries = true)
     public void delete(@NotNull @PathVariable Long restaurantId) {
         restaurantService.delete(restaurantId);
     }
