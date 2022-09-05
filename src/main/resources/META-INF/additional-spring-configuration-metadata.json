@@ -1,0 +1,32 @@
+{
+  "properties": [
+    {
+      "name": "cache.scheduled-eviction.enabled",
+      "type": "java.lang.String",
+      "sourceType": "com.mike.lunchvoter.caching.CacheEvictionScheduler",
+      "defaultValue": true,
+      "description": "Enable/disable cache eviction scheduler."
+    },
+    {
+      "name": "cache.scheduled-eviction.cron",
+      "type": "org.springframework.scheduling.support.CronExpression",
+      "sourceType": "com.mike.lunchvoter.caching.CacheEvictionScheduler",
+      "defaultValue": "@midnight",
+      "description": "Cron expression for cache eviction scheduler."
+    },
+    {
+      "name": "logging.aspect.enabled",
+      "type": "java.lang.String",
+      "sourceType": "com.mike.lunchvoter.logging.LoggingAspect",
+      "defaultValue": true,
+      "description": "Enable/disable logging based on aspects."
+    },
+    {
+      "name": "vote.decision-time",
+      "type": "java.time.LocalTime",
+      "sourceType": "com.mike.lunchvoter.service.RestaurantService",
+      "defaultValue": "11:00",
+      "description": "Time after which the user cannot change his/her today's vote."
+    }
+  ]
+}
