@@ -1,26 +1,16 @@
 package com.mike.lunchvoter.controller;
 
+import com.mike.lunchvoter.api.MenuApi;
 import com.mike.lunchvoter.dto.MenuDto;
 import com.mike.lunchvoter.exception.IllegalRequestDataException;
 import com.mike.lunchvoter.service.MenuService;
-import com.mike.lunchvoter.validation.ValidateOnCreate;
-import com.mike.lunchvoter.validation.ValidateOnUpdate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.http.HttpStatus;
 import org.springframework.lang.Nullable;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
@@ -30,11 +20,7 @@ import java.util.List;
 import java.util.Objects;
 
 @RestController
-@RequestMapping(MenuController.MENU_URL)
-@Validated
-public class MenuController {
-
-    static final String MENU_URL = "/api/v1/menus";
+public class MenuController implements MenuApi {
 
     private final MenuService menuService;
 
@@ -43,21 +29,18 @@ public class MenuController {
         this.menuService = menuService;
     }
 
-    @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    @Validated(ValidateOnCreate.class)
-    @PreAuthorize("hasAuthority('menu:create')")
+    @Override
     @CacheEvict(value = {"restaurantsToday", "menusToday"}, allEntries = true)
     public MenuDto create(@Valid @RequestBody MenuDto menuDto) {
         return menuService.create(menuDto);
     }
 
-    @GetMapping("/{id}")
-    public MenuDto get(@NotNull @PathVariable("id") Long menuId) {
+    @Override
+    public MenuDto get(@NotNull @PathVariable Long menuId) {
         return menuService.get(menuId);
     }
 
-    @GetMapping
+    @Override
     public List<MenuDto> getAllByParams(@Nullable @RequestParam(required = false) LocalDate date,
                                         @Nullable @RequestParam(required = false) Long restaurantId) {
         if (date == null && restaurantId == null) {
@@ -67,17 +50,15 @@ public class MenuController {
         return menuService.getAllByParams(date, restaurantId);
     }
 
-    @GetMapping("/today")
+    @Override
     @Cacheable("menusToday")
     public List<MenuDto> getAllForToday() {
         return menuService.getAllByParams(LocalDate.now(), null);
     }
 
-    @PutMapping("/{id}")
-    @Validated(ValidateOnUpdate.class)
-    @PreAuthorize("hasAuthority('menu:update')")
+    @Override
     @CacheEvict(value = {"restaurantsToday", "menusToday"}, allEntries = true)
-    public MenuDto update(@NotNull @PathVariable("id") Long menuId,
+    public MenuDto update(@NotNull @PathVariable Long menuId,
                           @Valid @RequestBody MenuDto menuDto) {
         if (!Objects.equals(menuId, menuDto.getId())) {
             throw new IllegalRequestDataException(menuDto + " id doesn't match path id = " + menuId);
@@ -86,10 +67,9 @@ public class MenuController {
         return menuService.update(menuId, menuDto);
     }
 
-    @DeleteMapping("/{id}")
-    @PreAuthorize("hasAuthority('menu:delete')")
+    @Override
     @CacheEvict(value = {"restaurantsToday", "menusToday"}, allEntries = true)
-    public void delete(@NotNull @PathVariable("id") Long menuId) {
+    public void delete(@NotNull @PathVariable Long menuId) {
         menuService.delete(menuId);
     }
 

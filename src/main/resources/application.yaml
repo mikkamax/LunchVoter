@@ -16,6 +16,12 @@ spring:
       date-time: iso
       time: iso
 
+springdoc:
+  swagger-ui:
+    enabled: true
+    path: /openapi
+    operations-sorter: method
+
 cache:
   scheduled-eviction:
     enabled: true
