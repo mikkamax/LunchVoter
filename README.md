@@ -1,6 +1,19 @@
 # LunchVoter
 
-## Technical requirement:
+## About
+
+A simple REST demo application (with user management) that provides a backend for voting for lunch/restaurants
+
+## OpenAPI/Swagger
+
+<http://localhost:8080/openapi>
+
+## Technologies
+
+Java 17, Spring Boot, Spring Web MVC, Spring Data JPA, Spring Security, Hibernate, H2 database, Lombok, Mapstruct,
+Springdoc OpenAPI
+
+## Technical task
 
 Design and implement a REST API using Hibernate/Spring/SpringMVC (Spring-Boot preferred!) without frontend.
 

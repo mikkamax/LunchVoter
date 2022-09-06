@@ -13,9 +13,9 @@ import io.swagger.v3.oas.annotations.servers.Server;
         info = @Info(
                 title = "LunchVoter",
                 description = """
-                        Simple rest application (with user management) providing backend to vote for lunch/restaurants
+                        A simple REST demo application (with user management) that provides a backend for voting for lunch/restaurants
                                                 
-                        Below are authentication and authorization details to try out secured endpoints
+                        Authentication and authorization details for trying out secure endpoints are as follows
                                                 
                         Admin:
                         * mike@mail.com / adminpass
